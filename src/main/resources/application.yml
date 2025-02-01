@@ -1,0 +1,46 @@
+server:
+  port: 8285
+
+spring:
+  application:
+    name: thymleafexamples
+  datasource:
+    url: jdbc:postgresql://localhost:3415/THDB
+    username: THUSYSRTR
+    password: TH:124578
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+        format_sql: true
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false # Geliştirme sırasında cache'i devre dışı bırak
+    mode: HTML5
+    encoding: UTF-8
+
+    messages:
+      basename: localization/messages # Dil dosyalarının konumu
+      encoding: UTF-8
+      cache-duration: 3600 # 1 saat cache'le
+      fallback-to-system-locale: true
+
+  logging:
+    level:
+      root: INFO
+      org:
+        springframework:
+          web: DEBUG
+        hibernate:
+          SQL: DEBUG
+          type:
+            descriptor:
+              sql:
+                BasicBinder: TRACE

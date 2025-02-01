@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>[[#{workorder.add.title}]]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container mt-4">
+    <h2>[[#{workorder.add.title}]]</h2>
+    <form th:action="@{/workorders/edit/{id}(id=${workOrderDTO.id})}" th:object="${workOrderDTO}" method="post">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="opyCode" class="form-label">[[#{workorder.opyCode}]]</label>
+                <input type="text" class="form-control" id="opyCode" th:field="*{opyCode}" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="maximoId" class="form-label">[[#{workorder.maximoId}]]</label>
+                <input type="text" class="form-control" id="maximoId" th:field="*{maximoId}" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="serviceRegistrationNumber" class="form-label">[[#{workorder.serviceRegistrationNumber}]]</label>
+                <input type="text" class="form-control" id="serviceRegistrationNumber" th:field="*{serviceRegistrationNumber}" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="assigned" class="form-label">[[#{workorder.assigned}]]</label>
+                <input type="text" class="form-control" id="assigned" th:field="*{assigned}" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="reported" class="form-label">[[#{workorder.reported}]]</label>
+                <input type="text" class="form-control" id="reported" th:field="*{reported}" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="application" class="form-label">[[#{workorder.application}]]</label>
+                <input type="text" class="form-control" id="application" th:field="*{application}" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="description" class="form-label">[[#{workorder.description}]]</label>
+                <input type="text" class="form-control" id="description" th:field="*{description}" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="completionDate" class="form-label">[[#{workorder.completionDate}]]</label>
+                <input type="datetime-local" class="form-control" id="completionDate" th:field="*{completionDate}" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="recordType" class="form-label">[[#{workorder.recordType}]]</label>
+                <select class="form-select" id="recordType" th:field="*{recordType}">
+                    <option th:each="type : ${recordTypes}" th:value="${type}" th:text="${type}"></option>
+                </select>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="situationType" class="form-label">[[#{workorder.situationType}]]</label>
+                <select class="form-select" id="situationType" th:field="*{situationType}">
+                    <option th:each="type : ${situationTypes}" th:value="${type}" th:text="${type}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="reasonCategory" class="form-label">[[#{workorder.reasonCategory}]]</label>
+                <select class="form-select" id="reasonCategory" th:field="*{reasonCategory}">
+                    <option th:each="category : ${reasonCategories}" th:value="${category}" th:text="${category}"></option>
+                </select>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="solutionCategory" class="form-label">[[#{workorder.solutionCategory}]]</label>
+                <select class="form-select" id="solutionCategory" th:field="*{solutionCategory}">
+                    <option th:each="category : ${solutionCategories}" th:value="${category}" th:text="${category}"></option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">[[#{workorder.update}]]</button>
+    </form>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
