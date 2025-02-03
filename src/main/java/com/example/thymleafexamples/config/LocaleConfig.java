@@ -18,7 +18,7 @@ public class LocaleConfig implements WebMvcConfigurer {
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver slr = new SessionLocaleResolver();
-        slr.setDefaultLocale(Locale.US); // Varsayılan dil İngilizce
+        slr.setDefaultLocale(new Locale("tr", "TR")); // Varsayılan dil İngilizce
         return slr;
     }
 
@@ -34,9 +34,9 @@ public class LocaleConfig implements WebMvcConfigurer {
     @Bean
     public ReloadableResourceBundleMessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:localization/message"); // localization klasöründeki messages dosyasını kullan
+        messageSource.setBasename("classpath:/localization/message"); // localization klasöründeki messages dosyasını kullan
         messageSource.setDefaultEncoding("UTF-8"); // UTF-8 encoding
-        messageSource.setCacheSeconds(3600); // 1 saat cache'le
+        //messageSource.setCacheSeconds(3600); // 1 saat cache'le
         return messageSource;
     }
 
