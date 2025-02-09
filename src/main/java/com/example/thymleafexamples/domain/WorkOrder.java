@@ -6,6 +6,8 @@ import com.example.thymleafexamples.domain.enums.RecordType;
 import com.example.thymleafexamples.domain.enums.SituationType;
 import com.example.thymleafexamples.domain.enums.SolutionCategory;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,4 +36,8 @@ public class WorkOrder extends BaseEntity {
     private SituationType situationType;
     private ReasonCategory reasonCategory;
     private SolutionCategory solutionCategory;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user; // WorkOrder ile User arasında OneDirectional ilişki
 }

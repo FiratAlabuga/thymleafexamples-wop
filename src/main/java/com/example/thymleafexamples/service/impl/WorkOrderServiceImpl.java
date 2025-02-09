@@ -1,25 +1,31 @@
 package com.example.thymleafexamples.service.impl;
 
-import com.example.thymleafexamples.core.repository.WorkOrderRepository;
+import com.example.thymleafexamples.core.exception.BaseBusinessValidationException;
+import com.example.thymleafexamples.domain.User;
 import com.example.thymleafexamples.domain.WorkOrder;
 import com.example.thymleafexamples.dto.WorkOrderDTO;
+import com.example.thymleafexamples.exception.rule.ADSBusinessRule;
 import com.example.thymleafexamples.mapper.WorkOrderMapper;
+import com.example.thymleafexamples.repository.UserRepository;
+import com.example.thymleafexamples.repository.WorkOrderRepository;
+import com.example.thymleafexamples.security.CustomUserDetails;
 import com.example.thymleafexamples.service.WorkOrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class WorkOrderServiceImpl implements WorkOrderService {
     private final WorkOrderRepository workOrderRepository;
+    private final UserRepository userRepository;
     private WorkOrderMapper workOrderMapper = WorkOrderMapper.INSTANCE ;
     // Tüm iş emirlerini sayfalı olarak getirme
     public Page<WorkOrderDTO> getAllWorkOrders(int page, int size) {
@@ -37,9 +43,22 @@ public class WorkOrderServiceImpl implements WorkOrderService {
 
     // Yeni iş emri ekleme
     public WorkOrderDTO createWorkOrder(WorkOrderDTO workOrderDTO) {
-        WorkOrder workOrder = workOrderMapper.toEntity(workOrderDTO);
-        workOrder = workOrderRepository.save(workOrder);
-        return workOrderMapper.toDto(workOrder);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.nonNull(authentication) && authentication.isAuthenticated() && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
+            // Kullanıcıyı veritabanından çek
+            User user = userRepository.findByUsername(userDetails.getUsername())
+                    .orElseThrow(() -> new BaseBusinessValidationException(ADSBusinessRule.USER_NOT_FOUND));
+
+            // WorkOrder nesnesini oluştur ve kullanıcıyı setle
+            WorkOrder workOrder = workOrderMapper.toEntity(workOrderDTO);
+            workOrder.setUser(user);
+
+            // WorkOrder'ı kaydet
+            workOrder = workOrderRepository.save(workOrder);
+            return workOrderMapper.toDto(workOrder);
+        } else {
+            throw new BaseBusinessValidationException(ADSBusinessRule.AUTH_ERROR);
+        }
     }
 
     // İş emri güncelleme

@@ -1,5 +1,6 @@
 package com.example.thymleafexamples.core.domain;
 
+import com.example.thymleafexamples.security.CustomUserDetails;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -76,10 +79,10 @@ public abstract class BaseEntity implements Serializable {
     }
 
     private String getUsernameFromAuthentication() {
-        /*Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
             return userDetails.getUsername();
-        }*/
+        }
         return "anonymousUser";
     }
 }

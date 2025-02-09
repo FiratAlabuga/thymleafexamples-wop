@@ -1,4 +1,4 @@
-package com.example.thymleafexamples.core.repository;
+package com.example.thymleafexamples.repository;
 
 import com.example.thymleafexamples.domain.WorkOrder;
 import org.springframework.data.domain.Page;
