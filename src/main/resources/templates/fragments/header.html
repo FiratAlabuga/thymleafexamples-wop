@@ -31,6 +31,7 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
+                    <!-- Dil seçimi dropdown -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown">
                             [[#{language}]]
@@ -39,6 +40,20 @@
                             <li><a class="dropdown-item" href="/workorders?lang=en">English</a></li>
                             <li><a class="dropdown-item" href="/workorders?lang=tr">Türkçe</a></li>
                         </ul>
+                    </li>
+
+                    <!-- Giriş yapan kullanıcı bilgisi -->
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <span class="navbar-text me-3">
+                            Hoş Geldiniz, <span th:text="${#authentication.name}"></span>!
+                        </span>
+                    </li>
+
+                    <!-- Çıkış yap butonu -->
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <form th:action="@{/logout}" method="post">
+                            <button type="submit" class="btn btn-link nav-link">Çıkış Yap</button>
+                        </form>
                     </li>
                 </ul>
             </div>

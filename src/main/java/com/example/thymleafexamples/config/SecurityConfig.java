@@ -32,16 +32,6 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
-    /*private CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));
-        configuration.setAllowedMethods(List.of("*"));
-        configuration.setAllowedHeaders(List.of("*"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }*/
-
     private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:8285")); // Sadece belirli origin'lere izin ver
@@ -72,8 +62,19 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/actuator/**"
                         ).permitAll()
-                        //.requestMatchers("/api/v1/workorders/**").hasRole("PETRA")
+                        .requestMatchers("/workorders/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
+                ).formLogin(form -> form
+                        .loginPage("/auth/login") // Özel login sayfası
+                        .defaultSuccessUrl("/workorders/list", true) // Başarılı giriş sonrası yönlendirilecek sayfa
+                        .failureUrl("/auth/login?error=true") // Başarısız giriş sonrası yönlendirilecek sayfa
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout") // Logout endpoint'i
+                        .logoutSuccessUrl("/auth/login?logout=true") // Başarılı çıkış sonrası yönlendirilecek sayfa
+                        .invalidateHttpSession(true) // Oturumu sonlandır
+                        .deleteCookies("JSESSIONID") // Çerezleri sil
                 )
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
