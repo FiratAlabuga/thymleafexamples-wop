@@ -30,6 +30,18 @@ public class WorkOrderController {
         model.addAttribute("workOrders", workOrderPage);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", workOrderPage.getTotalPages());
+        return "redirect:/workorders";
+    }
+
+    @GetMapping("/list")
+    public String getListWorkOrders(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
+        Page<WorkOrderDTO> workOrderPage = workOrderService.getAllWorkOrders(page, size);
+        model.addAttribute("workOrders", workOrderPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", workOrderPage.getTotalPages());
         return "workorders/list";
     }
 

@@ -37,6 +37,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of("http://localhost:8285")); // Sadece belirli origin'lere izin ver
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Sadece belirli metodlara izin ver
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Sadece belirli header'lara izin ver
+        configuration.setExposedHeaders(List.of("Authorization")); // Header'ın görünür olmasını sağla
         configuration.setAllowCredentials(true); // Eğer credentials (örneğin, JWT) kullanıyorsanız bu ayarı ekleyin
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -62,19 +63,8 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/actuator/**"
                         ).permitAll()
-                        .requestMatchers("/workorders/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
-                ).formLogin(form -> form
-                        .loginPage("/auth/login") // Özel login sayfası
-                        .defaultSuccessUrl("/workorders/list", true) // Başarılı giriş sonrası yönlendirilecek sayfa
-                        .failureUrl("/auth/login?error=true") // Başarısız giriş sonrası yönlendirilecek sayfa
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/logout") // Logout endpoint'i
-                        .logoutSuccessUrl("/auth/login?logout=true") // Başarılı çıkış sonrası yönlendirilecek sayfa
-                        .invalidateHttpSession(true) // Oturumu sonlandır
-                        .deleteCookies("JSESSIONID") // Çerezleri sil
                 )
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
