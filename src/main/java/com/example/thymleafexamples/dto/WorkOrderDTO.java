@@ -6,10 +6,12 @@ import com.example.thymleafexamples.domain.enums.RecordType;
 import com.example.thymleafexamples.domain.enums.SituationType;
 import com.example.thymleafexamples.domain.enums.SolutionCategory;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class WorkOrderDTO extends BaseDTO {
     private String opyCode;

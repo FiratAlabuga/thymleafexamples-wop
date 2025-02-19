@@ -67,7 +67,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 ).formLogin(form -> form
                         .loginPage("/auth/login") // Özel login sayfası
-                        .defaultSuccessUrl("/workorders/list", true) // Başarılı giriş sonrası yönlendirilecek sayfa
+                        //.defaultSuccessUrl("/workorders/list", true) // Başarılı giriş sonrası yönlendirilecek sayfa
                         .failureUrl("/auth/login?error=true") // Başarısız giriş sonrası yönlendirilecek sayfa
                 )
                 .logout(logout -> logout

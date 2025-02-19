@@ -20,6 +20,10 @@ public class WorkOrderController {
     @Autowired
     private WorkOrderService workOrderService;
 
+    /*@GetMapping("/workorders/list")
+    public String redirectWorkOrders() {
+        return "redirect:/workorders";
+    }*/
     // Tüm iş emirlerini sayfalı olarak listeleme
     @GetMapping
     public String listWorkOrders(
