@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Work Orders</title>
+  <script>
+    document.addEventListener("DOMContentLoaded", async function() {
+      const token = localStorage.getItem("jwt_token");
+
+      if (!token) {
+        console.error("❌ JWT Token bulunamadı, login sayfasına yönlendiriliyor...");
+        window.location.href = "/auth/login";
+        return;
+      }
+
+      try {
+        const response = await fetch("/workorders/list", {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`,  // 📌 Header'a ekledik!
+            "Content-Type": "application/json"
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error("⚠️ Yetkisiz erişim!");
+        }
+
+        const htmlContent = await response.text();
+        document.getElementById("content").innerHTML = htmlContent; // Sayfaya ekle
+
+      } catch (error) {
+        console.error("🚨 Hata:", error);
+        window.location.href = "/auth/login"; // Hata olursa tekrar login sayfasına yönlendir
+      }
+    });
+  </script>
+</head>
+<body>
+<h1>Work Orders List</h1>
+<div id="content">Yükleniyor...</div>
+</body>
+</html>

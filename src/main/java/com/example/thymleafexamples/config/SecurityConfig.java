@@ -53,7 +53,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(customizer -> customizer
                         .requestMatchers(HttpMethod.POST,
                                 "/api/v1/auth/register",
-                                "/api/v1/auth/login"
+                                "/api/v1/auth/login",
+                                "/dashboard"
                         )
                         .permitAll()
                         .requestMatchers(
@@ -61,7 +62,8 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/v2/api-docs/**",
                                 "/v3/api-docs/**",
-                                "/actuator/**"
+                                "/actuator/**",
+                                "/dashboard"
                         ).permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()

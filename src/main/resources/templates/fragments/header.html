@@ -1,6 +1,6 @@
 <!-- src/main/resources/templates/fragments/header.html -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,7 +24,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/workorders}">[[#{workorder.list.title}]]</a>
+                        <a class="nav-link" th:href="@{/workorders/list}">[[#{workorder.list.title}]]</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/workorders/add}">[[#{workorder.add.title}]]</a>
@@ -37,15 +37,15 @@
                             [[#{language}]]
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="/workorders?lang=en">English</a></li>
-                            <li><a class="dropdown-item" href="/workorders?lang=tr">Türkçe</a></li>
+                            <li><a class="dropdown-item" href="/workorders/list?lang=en">English</a></li>
+                            <li><a class="dropdown-item" href="/workorders/list?lang=tr">Türkçe</a></li>
                         </ul>
                     </li>
 
                     <!-- Giriş yapan kullanıcı bilgisi -->
                     <li class="nav-item" sec:authorize="isAuthenticated()">
                         <span class="navbar-text me-3">
-                            Hoş Geldiniz, <span th:text="${#authentication.name}"></span>!
+                            Hoş Geldiniz, <span sec:authentication="name"}></span>!
                         </span>
                     </li>
 

@@ -27,13 +27,16 @@ public class AuthController {
     public String showRegisterPage() {
         return "auth/register"; // register.html sayfasını göster
     }
+    @GetMapping("/logout")
+    public String logout(Model model) {
+        return "redirect:/auth/login"; // register.html sayfasını göster
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
         try {
             var authResponse = userService.login(authRequest);
             String token = authResponse.getToken();
-
             return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + token).body(authResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Kullanıcı adı veya şifre yanlış!");

@@ -8,6 +8,8 @@ import com.example.thymleafexamples.dto.WorkOrderDTO;
 import com.example.thymleafexamples.service.WorkOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +40,13 @@ public class WorkOrderController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        System.out.println("🔍 Kullanıcı: " + auth.getName());
+        System.out.println("🔍 Yetkiler: " + auth.getAuthorities());
+        System.out.println("🔍 Auth Obj: " + auth);
+
+        model.addAttribute("username", auth.getName());
         Page<WorkOrderDTO> workOrderPage = workOrderService.getAllWorkOrders(page, size);
         model.addAttribute("workOrders", workOrderPage);
         model.addAttribute("currentPage", page);
@@ -58,7 +67,7 @@ public class WorkOrderController {
     public String addWorkOrder(@ModelAttribute WorkOrderDTO workOrderDTO, RedirectAttributes redirectAttributes) {
         workOrderService.createWorkOrder(workOrderDTO);
         redirectAttributes.addFlashAttribute("message", "Work order added successfully!");
-        return "redirect:/workorders";
+        return "redirect:/workorders/list";
     }
 
     // İş emri düzenleme formunu gösterme
@@ -75,7 +84,7 @@ public class WorkOrderController {
     public String editWorkOrder(@PathVariable Long id, @ModelAttribute WorkOrderDTO workOrderDTO, RedirectAttributes redirectAttributes) {
         workOrderService.updateWorkOrder(id, workOrderDTO);
         redirectAttributes.addFlashAttribute("message", "Work order updated successfully!");
-        return "redirect:/workorders";
+        return "redirect:/workorders/list";
     }
 
     // İş emri silme onay sayfasını gösterme
@@ -91,7 +100,7 @@ public class WorkOrderController {
     public String deleteWorkOrder(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         workOrderService.deleteWorkOrder(id);
         redirectAttributes.addFlashAttribute("message", "Work order deleted successfully!");
-        return "redirect:/workorders";
+        return "redirect:/workorders/list";
     }
 
     // Enum değerlerini model'e ekleme
