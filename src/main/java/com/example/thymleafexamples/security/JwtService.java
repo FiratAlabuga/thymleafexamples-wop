@@ -10,6 +10,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,11 +45,15 @@ public class JwtService {
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        // Şu anki zaman ve son kullanma tarihi (expiration) OffsetDateTime'dan Date'e dönüştürülür
+        OffsetDateTime now = OffsetDateTime.now();
+        OffsetDateTime expirationTime = now.plus(expiration, ChronoUnit.MILLIS);
+
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .setIssuedAt(Date.from(now.toInstant())) // OffsetDateTime -> Date
+                .setExpiration(Date.from(expirationTime.toInstant())) // OffsetDateTime -> Date
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -57,11 +64,12 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        return extractExpirationAsOffsetDateTime(token).isBefore(OffsetDateTime.now());
     }
 
-    private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+    private OffsetDateTime extractExpirationAsOffsetDateTime(String token) {
+        Date expirationDate = extractClaim(token, Claims::getExpiration);
+        return expirationDate.toInstant().atOffset(ZoneOffset.UTC); // Date -> OffsetDateTime
     }
 
     private Claims extractAllClaims(String token) {

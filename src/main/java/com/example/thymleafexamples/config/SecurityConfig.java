@@ -34,11 +34,22 @@ public class SecurityConfig {
 
     private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8285")); // Sadece belirli origin'lere izin ver
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Sadece belirli metodlara izin ver
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Sadece belirli header'lara izin ver
-        configuration.setExposedHeaders(List.of("Authorization")); // Header'ın görünür olmasını sağla
-        configuration.setAllowCredentials(true); // Eğer credentials (örneğin, JWT) kullanıyorsanız bu ayarı ekleyin
+
+        // Birden fazla origin ekleyebilmek için .setAllowedOrigins yerine .setAllowedOriginPatterns kullan
+        configuration.setAllowedOriginPatterns(List.of("http://localhost:5173", "http://localhost:8285"));
+
+        // Tüm gerekli metodlara izin ver
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // Gerekli başlıklara izin ver
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+
+        // Header'ların görünmesini sağla
+        configuration.setExposedHeaders(List.of("Authorization"));
+
+        // JWT token veya Cookie bazlı oturum kullanıyorsan bunu açmalısın!
+        configuration.setAllowCredentials(true);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -63,6 +74,7 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/actuator/**"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Tüm OPTIONS isteklerine izin ver
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
